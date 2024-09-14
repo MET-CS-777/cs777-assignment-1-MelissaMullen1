@@ -73,10 +73,10 @@ if __name__ == "__main__":
     # clean data
     clean_data = data.map(split_fields).filter(is_correct)
     
-    # Extract medallions and hack licenses (will use hack license to count drivers)
+    # Extract medallions (taxis) and hack licenses (will use hack license to count drivers)
     # Field 0 = medallion, field 1 = hack license
     # Create new RDD of just medallion and hack licenses
-    task_1_data = clean_data.map(lambda fields: (fields[0], fields[1]))  
+    task_1_data = clean_data.map(lambda attributes: (attributes[0], attributes[1]))  
 
     # Determine count of drivers per medallion (taxi)
     # remove duplicates with .distinct(), group by medallion with .groupByKey()
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     # Extract hack licenses (will use hack license to count drivers), trip duration, and total amount
     # Field 1 = hack license, field 4 = trip duration, field 16 = total amount
-    task_2_data = clean_data.map(lambda fields: (fields[1], (float(fields[4]), float(fields[16]))))  
+    task_2_data = clean_data.map(lambda attributes: (attributes[1], (float(attributes[4]), float(attributes[16]))))  
 
     # Sum the total duration and total earnings per driver with reduceByKey()
     task_2_data_sums = task_2_data.reduceByKey(lambda trip1, trip2: (trip1[0] + trip2[0], trip1[1] + trip2[1]))
@@ -108,7 +108,7 @@ if __name__ == "__main__":
     task_2_data_average = task_2_data_sums.mapValues(lambda trip: (trip[1] / (trip[0] / 60.0)))
 
     # Sort drivers in descending order and take top 10
-    task_2_final = task_2_data_average.sortBy(lambda x: -x[1]).take(10)
+    task_2_final = task_2_data_average.sortBy(lambda drivers: -drivers[1]).take(10)
 
     # Convert results to RDD and save output
     results_2 = sc.parallelize(task_2_final)
