@@ -1,3 +1,10 @@
+# MELISSA MULLEN
+# MET CS 777
+# 9/14/2024
+# ASSIGNMENT 1
+
+# REFERENCE: https://github.com/trajanov/BigDataAnalytics/blob/master/Notebooks/Spark-Example-02-RDD%20Basics%20Toutorial.ipynb
+
 from __future__ import print_function
 
 import os
